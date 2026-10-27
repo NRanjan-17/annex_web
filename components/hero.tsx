@@ -37,13 +37,7 @@ export function Hero() {
         </text>
       </svg>
 
-      <Reveal className="relative">
-        <p className="eyebrow flex items-center gap-2.5">
-          <span className="live-dot" aria-hidden="true" />
-          Free and open source
-        </p>
-      </Reveal>
-      <h1 className="relative mt-6 text-[clamp(2.6rem,7vw,4.75rem)] font-semibold leading-[0.98] tracking-[-0.045em]">
+      <h1 className="relative text-[clamp(2.6rem,7vw,4.75rem)] font-semibold leading-[0.98] tracking-[-0.045em]">
         <Reveal as="span" delay={0.1} className="block">Your other computer</Reveal>
         <Reveal as="span" delay={0.2} className="block">is a second screen.</Reveal>
       </h1>
@@ -52,7 +46,14 @@ export function Hero() {
         <strong className="font-medium text-fg">Mac, Windows and Linux</strong>, over your network, a cable or the
         internet. <strong className="font-medium text-fg">Encrypted end to end.</strong>
       </Reveal>
-      <Reveal delay={0.4} className="relative mt-9 flex flex-col items-center gap-3 sm:flex-row">
+      {/* Under the paragraph, clear of the wordmark behind the headline. */}
+      <Reveal delay={0.35} className="relative mt-6">
+        <p className="eyebrow flex items-center gap-2.5">
+          <span className="live-dot" aria-hidden="true" />
+          Free and open source
+        </p>
+      </Reveal>
+      <Reveal delay={0.4} className="relative mt-8 flex flex-col items-center gap-3 sm:flex-row">
         <DownloadForThisComputer />
         <CopyCommand command={INSTALL.unix} short="curl -fsSL …/install.sh | sh" />
       </Reveal>
