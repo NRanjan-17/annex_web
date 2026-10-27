@@ -1,7 +1,6 @@
 import { Backdrop } from "@/components/backdrop";
 import { Nav } from "@/components/nav";
 import { Hero } from "@/components/hero";
-import { LaunchFilm } from "@/components/launch-film";
 import { Stage } from "@/components/stage";
 import { Bento } from "@/components/bento";
 import { Steps } from "@/components/steps";
@@ -18,7 +17,6 @@ export default function Home() {
       <Nav />
       <main id="main">
         <Hero />
-        <LaunchFilm />
         <Stage />
         <Bento />
         <Steps />
