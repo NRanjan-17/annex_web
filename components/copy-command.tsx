@@ -4,7 +4,18 @@ import { useState } from "react";
 import { CheckIcon, CopyIcon } from "./icons";
 
 /** A terminal line that copies itself. Shows a shortened form; copies the full command. */
-export function CopyCommand({ command, short, className = "" }: { command: string; short: string; className?: string }) {
+export function CopyCommand({
+  command,
+  short,
+  prompt = "$",
+  className = "",
+}: {
+  command: string;
+  short: string;
+  /** The shell's prompt: `$` for macOS and Linux, `PS>` for Windows PowerShell. */
+  prompt?: string;
+  className?: string;
+}) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -19,7 +30,7 @@ export function CopyCommand({ command, short, className = "" }: { command: strin
 
   return (
     <button type="button" onClick={copy} className={`chip ${className}`} aria-label={`Copy: ${command}`}>
-      <span className="text-faint" aria-hidden="true">$</span>
+      <span className="text-faint" aria-hidden="true">{prompt}</span>
       <span className="truncate">{short}</span>
       <span className="relative ml-auto grid size-7 place-items-center rounded-full text-dim" aria-hidden="true">
         {/* Both icons stay mounted and cross-fade, so the swap has an exit as well as an enter. */}
