@@ -75,7 +75,7 @@ export function Footer() {
           ANNEX
         </text>
       </svg>
-      <p className="pb-8 text-center text-xs text-faint">© {new Date().getFullYear()} Nalinish Ranjan, Saidev Dhal and the Annex contributors</p>
+      <p className="pb-8 text-center text-xs text-faint">© {new Date().getFullYear()} Nalinish Ranjan</p>
     </footer>
   );
 }
