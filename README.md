@@ -11,7 +11,7 @@ The website for [Annex](https://github.com/NRanjan-17/Annex): use another comput
 
 ## Run it
 
-Needs Node.js 20.9 or later.
+Needs Node.js 24 (Vercel builds with 24.x, set in `package.json`).
 
 ```sh
 npm install
