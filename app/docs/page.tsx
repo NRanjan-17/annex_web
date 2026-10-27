@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Code, Key, Step, Steps, Ui } from "@/components/docs-ui";
+import { KeyboardGallery } from "@/components/keyboard-gallery";
 import { Footer } from "@/components/footer";
 import { DOWNLOADS, INSTALL, REPO } from "@/components/links";
 import { Nav } from "@/components/nav";
@@ -215,19 +216,15 @@ export default function DocsPage() {
         </aside>
 
         <div className="min-w-0">
-          {/* Like the Linear gallery: the page opens on keys. */}
           <Reveal>
-            <div className="flex flex-wrap gap-2" aria-hidden="true">
-              {["⌃", "⌥", "⇧", "Q"].map((k) => (
-                <Key key={k}>{k}</Key>
-              ))}
-            </div>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <h1 className="mt-8 text-[clamp(2.4rem,5.5vw,3.75rem)] font-semibold leading-[1] tracking-[-0.04em]">Annex docs</h1>
+            <h1 className="text-[clamp(2.4rem,5.5vw,3.75rem)] font-semibold leading-[1] tracking-[-0.04em]">Annex docs</h1>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-dim">
               Install it, pair two computers, then try every feature. Each one takes a minute.
             </p>
+          </Reveal>
+          {/* Like the Linear gallery: the docs open on the keyboard. */}
+          <Reveal delay={0.15} className="mt-10">
+            <KeyboardGallery />
           </Reveal>
 
           <section className="mt-20" aria-labelledby="start">
