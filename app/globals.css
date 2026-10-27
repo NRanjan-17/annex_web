@@ -147,17 +147,6 @@
   to { opacity: 0; scale: 2.8; }
 }
 
-/* The hero's giant wordmark: outlined, fading into the black below it. */
-.wordmark text {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 250px;
-  letter-spacing: -0.02em;
-  fill: none;
-  stroke: url(#wordmark-fade);
-  stroke-width: 1.6;
-}
-
 /* The pointer crossing from the Mac onto the PC in Extend. */
 @keyframes cross {
   0%, 12% { translate: 0 0; }
@@ -186,14 +175,10 @@
   50% { translate: -10vw -6vh; }
 }
 
-/* The hero wordmark draws itself in once. */
-@keyframes draw {
-  from { stroke-dashoffset: 1800; }
-  to { stroke-dashoffset: 0; }
-}
-.wordmark .draw {
-  stroke-dasharray: 1800;
-  animation: draw 2.6s cubic-bezier(0.2, 0, 0, 1) both;
+/* Rings widen out from the hero icon, like Annex looking for computers. */
+@keyframes ring-out {
+  from { scale: 1; opacity: 0.9; }
+  to { scale: 3.2; opacity: 0; }
 }
 
 /* Small chips float, out of step with each other. */
