@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+/* Annex's look: black and white, every fill and line white at an alpha, and one colour, green,
+   for something live. The same tokens as the Mac and Windows apps. */
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  --color-ink: #000;
+  --color-panel: #0b0b0c;
+  --color-live: #3dd185;
+  --color-fg: #f5f5f5;
+  --color-dim: rgb(255 255 255 / 0.62);
+  --color-faint: rgb(255 255 255 / 0.42);
+
+  --ease-out-soft: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
+  }
+  body {
+    background: var(--color-ink);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: rgb(255 255 255 / 0.9);
+    color: #000;
+  }
+  :focus-visible {
+    outline: 2px solid rgb(255 255 255 / 0.9);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Buttons: white for the main action, faint for the rest. Pressing scales to 0.96. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 20px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+    transition-property: background-color, color, scale, box-shadow;
+    transition-duration: 160ms;
+    transition-timing-function: var(--ease-out-soft);
+  }
+  .btn:active { scale: 0.96; }
+  .btn-primary {
+    background: #fff;
+    color: #000;
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.4) inset, 0 8px 24px -10px rgb(255 255 255 / 0.35);
+  }
+  .btn-primary:hover { background: rgb(255 255 255 / 0.88); }
+  .btn-ghost {
+    background: rgb(255 255 255 / 0.07);
+    color: var(--color-fg);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1) inset;
+  }
+  .btn-ghost:hover { background: rgb(255 255 255 / 0.12); }
+  .btn-small { height: 36px; padding: 0 16px; font-size: 14px; }
+
+  /* The copyable command, like a terminal line. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    padding: 0 8px 0 16px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.04);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.12) inset;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: rgb(255 255 255 / 0.85);
+    transition-property: background-color, scale;
+    transition-duration: 160ms;
+    transition-timing-function: var(--ease-out-soft);
+  }
+  .chip:hover { background: rgb(255 255 255 / 0.08); }
+  .chip:active { scale: 0.96; }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-faint);
+  }
+
+  /* A flat group, like the apps' settings groups. */
+  .group-surface {
+    border-radius: 20px;
+    background: rgb(255 255 255 / 0.035);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08) inset;
+  }
+
+  .live-dot {
+    position: relative;
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--color-live);
+  }
+  .live-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--color-live);
+    animation: breathe 1.8s var(--ease-out-soft) infinite;
+  }
+}
+
+@keyframes breathe {
+  from { opacity: 0.55; scale: 1; }
+  to { opacity: 0; scale: 2.8; }
+}
+
+/* The hero's giant wordmark: outlined, fading into the black below it. */
+.wordmark text {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 250px;
+  letter-spacing: -0.02em;
+  fill: none;
+  stroke: url(#wordmark-fade);
+  stroke-width: 1.6;
+}
+
+/* The pointer crossing from the Mac onto the PC in Extend. */
+@keyframes cross {
+  0%, 12% { translate: 0 0; }
+  50%, 62% { translate: 300% -40%; }
+  100% { translate: 0 0; }
+}
+@keyframes drift {
+  0%, 15% { translate: 0 0; }
+  55%, 70% { translate: 150% 25%; }
+  100% { translate: 0 0; }
+}
+@keyframes flow {
+  from { translate: -100% 0; }
+  to { translate: 100% 0; }
+}
