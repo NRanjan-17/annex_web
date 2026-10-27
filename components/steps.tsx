@@ -1,3 +1,4 @@
+import { Reveal } from "./reveal";
 import { Section } from "./section";
 
 const STEPS = [
@@ -11,11 +12,11 @@ export function Steps() {
     <Section id="how" label="How it works" title="Three steps. The first is the longest.">
       <ol className="grid gap-3 md:grid-cols-3">
         {STEPS.map((s, i) => (
-          <li key={s.title} className="group-surface p-6">
+          <Reveal as="li" key={s.title} delay={i * 0.1} className="group-surface p-6">
             <span className="grid size-8 place-items-center rounded-full bg-white text-sm font-semibold tabular-nums text-black">{i + 1}</span>
             <h3 className="mt-8 text-[17px] font-semibold tracking-tight">{s.title}</h3>
             <p className="mt-1.5 text-[15px] leading-6 text-dim">{s.body}</p>
-          </li>
+          </Reveal>
         ))}
       </ol>
     </Section>

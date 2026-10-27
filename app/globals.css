@@ -173,3 +173,57 @@
   from { translate: -100% 0; }
   to { translate: 100% 0; }
 }
+
+/* ---- Motion ---- */
+
+/* The backdrop's pools of light drift slowly. */
+@keyframes pool-a {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 12vw 8vh; }
+}
+@keyframes pool-b {
+  0%, 100% { translate: 0 0; }
+  50% { translate: -10vw -6vh; }
+}
+
+/* The hero wordmark draws itself in once. */
+@keyframes draw {
+  from { stroke-dashoffset: 1800; }
+  to { stroke-dashoffset: 0; }
+}
+.wordmark .draw {
+  stroke-dasharray: 1800;
+  animation: draw 2.6s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+/* Small chips float, out of step with each other. */
+@keyframes bob {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -5px; }
+}
+.bob { animation: bob 6s ease-in-out infinite; }
+.bob-2 { animation: bob 7s ease-in-out -2s infinite; }
+.bob-3 { animation: bob 5.5s ease-in-out -4s infinite; }
+
+/* Dashed wires flow from one system to the next. */
+@keyframes dash-flow {
+  to { stroke-dashoffset: -24; }
+}
+.wire { animation: dash-flow 2.4s linear infinite; }
+
+/* A faint light that follows the pointer across a surface (see Spotlight). */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(320px circle at var(--x, 50%) var(--y, 50%), rgb(255 255 255 / 0.07), transparent 70%);
+  opacity: 0;
+  transition: opacity 300ms var(--ease-out-soft);
+}
+.spotlight:hover::before { opacity: 1; }

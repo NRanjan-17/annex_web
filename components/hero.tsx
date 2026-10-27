@@ -1,4 +1,5 @@
 import { CopyCommand } from "./copy-command";
+import { Reveal } from "./reveal";
 import { DownloadForThisComputer } from "./download-button";
 import { INSTALL } from "./links";
 
@@ -17,31 +18,47 @@ export function Hero() {
             <stop offset="0.75" stopColor="#fff" stopOpacity="0.05" />
             <stop offset="1" stopColor="#fff" stopOpacity="0" />
           </linearGradient>
+          {/* A band of light that sweeps across the outline every few seconds. */}
+          <linearGradient id="wordmark-shine" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+            <stop offset="0" stopColor="#fff" stopOpacity="0" />
+            <stop offset="0.5" stopColor="#fff" stopOpacity="0.9" />
+            <stop offset="1" stopColor="#fff" stopOpacity="0" />
+            <animateTransform attributeName="gradientTransform" type="translate" values="-1 0; 1 0; 1 0" keyTimes="0; 0.5; 1" dur="7s" begin="2.4s" repeatCount="indefinite" />
+          </linearGradient>
+          <mask id="wordmark-mask">
+            <rect width="1000" height="230" fill="url(#wordmark-fade)" />
+          </mask>
         </defs>
-        <text x="500" y="205" textAnchor="middle">
+        <text x="500" y="205" textAnchor="middle" className="draw">
+          ANNEX
+        </text>
+        <text x="500" y="205" textAnchor="middle" className="draw" stroke="url(#wordmark-shine)" mask="url(#wordmark-mask)" style={{ stroke: "url(#wordmark-shine)", opacity: 0.5 }}>
           ANNEX
         </text>
       </svg>
 
-      <p className="eyebrow relative flex items-center gap-2.5">
-        <span className="live-dot" aria-hidden="true" />
-        Free and open source
-      </p>
+      <Reveal className="relative">
+        <p className="eyebrow flex items-center gap-2.5">
+          <span className="live-dot" aria-hidden="true" />
+          Free and open source
+        </p>
+      </Reveal>
       <h1 className="relative mt-6 text-[clamp(2.6rem,7vw,4.75rem)] font-semibold leading-[0.98] tracking-[-0.045em]">
-        Your other computer
-        <br />
-        is a second screen.
+        <Reveal as="span" delay={0.1} className="block">Your other computer</Reveal>
+        <Reveal as="span" delay={0.2} className="block">is a second screen.</Reveal>
       </h1>
-      <p className="relative mt-6 max-w-[38rem] text-lg leading-relaxed text-dim">
+      <Reveal delay={0.3} as="p" className="relative mt-6 max-w-[38rem] text-lg leading-relaxed text-dim">
         Extend your display onto another computer, or mirror its screen.{" "}
         <strong className="font-medium text-fg">Mac, Windows and Linux</strong>, over your network, a cable or the
         internet. <strong className="font-medium text-fg">Encrypted end to end.</strong>
-      </p>
-      <div className="relative mt-9 flex flex-col items-center gap-3 sm:flex-row">
+      </Reveal>
+      <Reveal delay={0.4} className="relative mt-9 flex flex-col items-center gap-3 sm:flex-row">
         <DownloadForThisComputer />
         <CopyCommand command={INSTALL.unix} short="curl -fsSL …/install.sh | sh" />
-      </div>
-      <p className="relative mt-5 text-[13px] text-faint">macOS 14+ · Windows 10 and 11 · Linux x86_64 and arm64</p>
+      </Reveal>
+      <Reveal delay={0.5} as="p" className="relative mt-5 text-[13px] text-faint">
+        macOS 14+ · Windows 10 and 11 · Linux x86_64 and arm64
+      </Reveal>
     </section>
   );
 }
