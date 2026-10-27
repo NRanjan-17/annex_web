@@ -66,109 +66,82 @@ export function Stage() {
   }, [active, paused, reduce]);
 
   return (
-    // After James McDonald's product page (lookap mr8l2d): a near-black panel floating over a dark
-    // wallpaper of soft folds, faint hairlines, text tabs with an underline, a lighter stage, and four
-    // points; the active one brightens and fills a ring until the next.
     <section id="features" aria-label="What Annex does" className="mx-auto max-w-6xl px-5 py-10">
-      <div className="relative overflow-hidden rounded-[28px] bg-[#0a0a0c] p-3 sm:p-6 md:p-12">
-        <Wallpaper />
-        <div
-          className="relative overflow-hidden rounded-2xl bg-[#1b1b1e] shadow-[inset_0_0_0_1px_rgb(255_255_255/0.07),0_40px_80px_-30px_rgb(0_0_0)]"
-          onPointerEnter={() => setPaused(true)}
-          onPointerLeave={() => setPaused(false)}
-          onFocusCapture={() => setPaused(true)}
-          onBlurCapture={() => setPaused(false)}
-        >
-          {/* Hairlines: two down the sides, one dashed across under the tabs. */}
-          <span aria-hidden="true" className="absolute inset-y-0 left-[4%] w-px bg-white/[0.05]" />
-          <span aria-hidden="true" className="absolute inset-y-0 right-[4%] w-px bg-white/[0.05]" />
+      <div
+        className="group-surface overflow-hidden p-3 md:p-4"
+        onPointerEnter={() => setPaused(true)}
+        onPointerLeave={() => setPaused(false)}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={() => setPaused(false)}
+      >
+        <div role="tablist" aria-label="Modes" className="flex justify-center gap-1 pb-3 pt-1">
+          {MODES.map((m) => (
+            <button
+              key={m.id}
+              role="tab"
+              id={`tab-${m.id}`}
+              aria-selected={m.id === active}
+              aria-controls="stage-panel"
+              onClick={() => setActive(m.id)}
+              className={`relative h-10 rounded-full px-4 text-sm transition-colors duration-150 ${m.id === active ? "text-fg" : "text-faint hover:text-dim"}`}
+            >
+              {m.id === active && (
+                <motion.span
+                  layoutId="tab-pill"
+                  className="absolute inset-0 rounded-full bg-white/[0.08]"
+                  transition={{ type: "spring", duration: 0.35, bounce: 0 }}
+                />
+              )}
+              <span className="relative">{m.tab}</span>
+            </button>
+          ))}
+        </div>
 
-          <div role="tablist" aria-label="Modes" className="relative flex justify-center gap-6 px-4 pt-5 sm:gap-8">
-            {MODES.map((m) => (
+        <div id="stage-panel" role="tabpanel" aria-labelledby={`tab-${active}`} className="rounded-[14px] bg-black/60 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06)]">
+          <Scene mode={active} link={mode.link} />
+          <div className="h-14 px-6 pb-6 text-center text-sm text-dim">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.p
+                key={active}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2, ease }}
+              >
+                {mode.caption}
+              </motion.p>
+            </AnimatePresence>
+          </div>
+        </div>
+
+        <div className="grid gap-2 pt-3 sm:grid-cols-2 lg:grid-cols-4">
+          {MODES.map((m) => {
+            const on = m.id === active;
+            return (
               <button
                 key={m.id}
-                role="tab"
-                id={`tab-${m.id}`}
-                aria-selected={m.id === active}
-                aria-controls="stage-panel"
+                type="button"
                 onClick={() => setActive(m.id)}
-                className={`relative h-10 text-sm transition-colors duration-150 ${m.id === active ? "text-fg" : "text-faint hover:text-dim"}`}
+                className={`relative rounded-[14px] p-4 text-left transition-colors duration-200 ${on ? "bg-white/[0.05]" : "hover:bg-white/[0.03]"}`}
               >
-                {m.tab}
-                {m.id === active && (
-                  <motion.span
-                    layoutId="tab-underline"
-                    className="absolute inset-x-0 -bottom-px h-px bg-white"
-                    transition={{ type: "spring", duration: 0.35, bounce: 0 }}
-                  />
-                )}
+                <m.Icon className={`size-5 transition-colors duration-200 ${on ? "text-fg" : "text-faint"}`} />
+                <p className={`mt-3 text-[15px] leading-6 transition-colors duration-200 ${on ? "text-fg/90" : "text-faint"}`}>
+                  <strong className={`font-semibold ${on ? "text-fg" : "text-dim"}`}>{m.title}</strong> {m.body}
+                </p>
+                {on && !paused && !reduce && <ProgressRing key={active} />}
               </button>
-            ))}
-          </div>
-          <div aria-hidden="true" className="border-t border-dashed border-white/[0.09]" />
-
-          <div className="px-[6%] pt-5">
-            <div
-              id="stage-panel"
-              role="tabpanel"
-              aria-labelledby={`tab-${active}`}
-              className="relative overflow-hidden rounded-lg bg-[#232327]"
-            >
-              {/* A soft halo behind the scene, like the light around the reference's object. */}
-              <div aria-hidden="true" className="absolute left-1/2 top-1/2 size-[70%] -translate-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_255_255/0.07),transparent)]" />
-              <Scene mode={active} link={mode.link} />
-              <div className="relative h-14 px-6 pb-6 text-center text-sm text-dim">
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.p
-                    key={active}
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2, ease }}
-                  >
-                    {mode.caption}
-                  </motion.p>
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-x-8 gap-y-6 px-[6%] pb-8 pt-7 sm:grid-cols-2 lg:grid-cols-4">
-            {MODES.map((m) => {
-              const on = m.id === active;
-              return (
-                <button key={m.id} type="button" onClick={() => setActive(m.id)} className="relative pr-6 text-left">
-                  <m.Icon className={`size-[18px] transition-colors duration-200 ${on ? "text-fg" : "text-faint"}`} />
-                  <p className={`mt-4 text-[14.5px] leading-6 transition-colors duration-200 ${on ? "text-fg/90" : "text-faint"}`}>
-                    <strong className="font-semibold text-fg">{m.title}</strong> {m.body}
-                  </p>
-                  {on && !paused && !reduce && <ProgressRing key={active} />}
-                </button>
-              );
-            })}
-          </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
 
-/** Soft curved folds with a faint silver rim light: the reference's wallpaper, in black and white. */
-function Wallpaper() {
-  return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-      <div className="absolute -left-1/4 -top-1/3 size-[90%] rounded-full bg-[radial-gradient(closest-side,rgb(255_255_255/0.09),transparent_70%)]" />
-      <div className="absolute -bottom-1/2 -right-1/4 size-[100%] rounded-full shadow-[inset_18px_-10px_60px_-20px_rgb(255_255_255/0.16)]" />
-      <div className="absolute -bottom-1/3 left-1/4 size-[80%] rounded-full shadow-[inset_-14px_8px_50px_-24px_rgb(255_255_255/0.12)]" />
-      <div className="absolute -right-1/3 -top-1/2 size-[90%] rounded-full shadow-[inset_-20px_20px_70px_-30px_rgb(255_255_255/0.1)]" />
-    </div>
-  );
-}
-
 /** Fills once over ADVANCE_MS: how long until the next mode. */
 function ProgressRing() {
   return (
-    <svg viewBox="0 0 16 16" className="absolute right-0 top-0 size-4 -rotate-90" aria-hidden="true">
+    <svg viewBox="0 0 16 16" className="absolute right-4 top-4 size-4 -rotate-90" aria-hidden="true">
       <circle cx="8" cy="8" r="6" fill="none" stroke="rgb(255 255 255 / 0.12)" strokeWidth="1.5" />
       <motion.circle
         cx="8"

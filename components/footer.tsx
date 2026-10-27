@@ -4,16 +4,16 @@ const COLUMNS = [
   {
     title: "Product",
     links: [
-      { href: "#features", label: "Features" },
-      { href: "#how", label: "How it works" },
-      { href: "#download", label: "Download" },
+      { href: "/#features", label: "Features" },
+      { href: "/#how", label: "How it works" },
+      { href: "/#download", label: "Download" },
     ],
   },
   {
     title: "Resources",
     links: [
       { href: RELEASES, label: "Releases" },
-      { href: `${REPO}#readme`, label: "Guide" },
+      { href: "/docs", label: "Docs" },
       { href: `${REPO}/issues`, label: "Report a bug" },
     ],
   },
