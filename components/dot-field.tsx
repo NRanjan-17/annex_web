@@ -14,7 +14,8 @@ const WORD = "annex";
 const TAGS = ["8 ms", "1920×1080", "encrypted", "60 fps", "144 Hz", "cable", "direct"];
 const GREEN = "61, 209, 133";
 
-type Dot = { hx: number; hy: number; x: number; y: number; vx: number; vy: number; seed: number };
+/** `free`: seconds left before the dot starts heading home again (set when the vortex catches it). */
+type Dot = { hx: number; hy: number; x: number; y: number; vx: number; vy: number; seed: number; free: number };
 
 export function DotField() {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -26,8 +27,10 @@ export function DotField() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let w = 0, h = 0, raf = 0, visible = true, gap = 9;
     let dots: Dot[] = [];
-    const pointer = { x: 0, y: 0, active: false, last: 0 };
+    const pointer = { x: 0, y: 0, vx: 0, vy: 0, active: false, last: 0 };
+    const ghost = { x: 0, y: 0 };
     const start = performance.now();
+    let prev = start;
 
     // The word's dots: draw it off screen once and keep the lit pixels on a grid.
     const sample = () => {
@@ -46,7 +49,7 @@ export function DotField() {
       dots = [];
       for (let y = 0; y < off.height; y += gap)
         for (let x = 0; x < off.width; x += gap)
-          if (data[(y * off.width + x) * 4 + 3] > 128) dots.push({ hx: x, hy: y, x, y, vx: 0, vy: 0, seed: Math.random() });
+          if (data[(y * off.width + x) * 4 + 3] > 128) dots.push({ hx: x, hy: y, x, y, vx: 0, vy: 0, seed: Math.random(), free: 0 });
     };
 
     const resize = () => {
@@ -103,6 +106,8 @@ export function DotField() {
 
     const draw = (now: number) => {
       const t = reduce ? 6 : (now - start) / 1000;
+      const dt = Math.min(0.05, (now - prev) / 1000);
+      prev = now;
       ctx.clearRect(0, 0, w, h);
 
       ribbon(t, 0.2, 0.22, w * 0.55, -0.5, 4, 0, 0.5);
@@ -113,11 +118,19 @@ export function DotField() {
 
       // The vortex: the real pointer, or a ghost one wandering along the word when it's idle.
       const idle = !pointer.active || now - pointer.last > 2500;
-      const vx = idle ? w * (0.5 + 0.3 * Math.sin(t * 0.45)) : pointer.x;
-      const vy = idle ? h * (0.44 + 0.06 * Math.sin(t * 0.9)) : pointer.y;
-      const strength = idle ? 0.55 + 0.45 * Math.sin(t * 0.6) : 1;
-      const radius = Math.min(w, h) * 0.2;
-      const ring = radius * 0.45;
+      const gx = w * (0.5 + 0.32 * Math.sin(t * 0.45)), gy = h * (0.44 + 0.07 * Math.sin(t * 0.9));
+      const vx = idle ? gx : pointer.x;
+      const vy = idle ? gy : pointer.y;
+      // The vortex's own movement, which it hands on to the dots it catches.
+      const mvx = idle ? (gx - ghost.x) : pointer.vx;
+      const mvy = idle ? (gy - ghost.y) : pointer.vy;
+      ghost.x = gx;
+      ghost.y = gy;
+      pointer.vx *= 0.8;
+      pointer.vy *= 0.8;
+      const strength = idle ? 0.6 + 0.4 * Math.sin(t * 0.6) : 1;
+      const radius = Math.min(w, h) * 0.28;
+      const ring = radius * 0.4;
 
       for (const d of dots) {
         if (!reduce) {
@@ -125,19 +138,30 @@ export function DotField() {
           const dist = Math.hypot(dx, dy) || 1;
           if (dist < radius && strength > 0) {
             const f = (1 - dist / radius) * strength;
-            // Swirl around the pointer, and settle onto a ring.
-            d.vx += (-dy / dist) * f * 2.2 + (dx / dist) * (ring - dist) * 0.012 * f;
-            d.vy += (dx / dist) * f * 2.2 + (dy / dist) * (ring - dist) * 0.012 * f;
+            // Swirl around the pointer, settle onto a ring, and get carried along with it.
+            d.vx += (-dy / dist) * f * 2.6 + (dx / dist) * (ring - dist) * 0.01 * f + mvx * 0.12 * f;
+            d.vy += (dx / dist) * f * 2.6 + (dy / dist) * (ring - dist) * 0.01 * f + mvy * 0.12 * f;
+            // Caught: let go of the letter for a while, so it streams instead of snapping back.
+            d.free = Math.max(d.free, (1 + d.seed * 2) * f + 0.4);
           }
-          // Spring home.
-          d.vx += (d.hx - d.x) * 0.045;
-          d.vy += (d.hy - d.y) * 0.045;
-          d.vx *= 0.86;
-          d.vy *= 0.86;
+          if (d.free > 0) {
+            d.free -= dt;
+            // A gentle flowing current, so freed dots sweep in curves.
+            d.vx += Math.sin(d.y * 0.012 + t * 0.8 + d.seed * 6) * 0.22;
+            d.vy += Math.cos(d.x * 0.012 - t * 0.7 + d.seed * 6) * 0.22;
+          }
+          // Home pulls weakly while free and eases back in afterwards.
+          const pull = d.free > 0 ? 0.0015 : Math.min(0.03, 0.006 + (d.free < 0 ? -d.free * 0.02 : 0));
+          if (d.free <= 0) d.free -= dt; // counts how long it has been heading home
+          d.vx += (d.hx - d.x) * pull;
+          d.vy += (d.hy - d.y) * pull;
+          const drag = d.free > 0 ? 0.955 : 0.9;
+          d.vx *= drag;
+          d.vy *= drag;
           d.x += d.vx;
           d.y += d.vy;
         }
-        const away = Math.min(1, Math.hypot(d.x - d.hx, d.y - d.hy) / 60);
+        const away = Math.min(1, Math.hypot(d.x - d.hx, d.y - d.hy) / 90);
         const live = away > 0.3 && d.seed > 0.86;
         ctx.fillStyle = live ? `rgba(${GREEN},0.95)` : `rgba(255,255,255,${(0.96 - away * 0.25).toFixed(3)})`;
         const s = gap * 0.42 - away * gap * 0.12;
@@ -157,8 +181,13 @@ export function DotField() {
 
     const move = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
-      pointer.x = e.clientX - r.left;
-      pointer.y = e.clientY - r.top;
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      if (pointer.active) {
+        pointer.vx = x - pointer.x;
+        pointer.vy = y - pointer.y;
+      }
+      pointer.x = x;
+      pointer.y = y;
       pointer.active = true;
       pointer.last = performance.now();
     };
