@@ -27,8 +27,7 @@ export function DotField() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let w = 0, h = 0, raf = 0, visible = true, gap = 9;
     let dots: Dot[] = [];
-    const pointer = { x: 0, y: 0, vx: 0, vy: 0, active: false, last: 0 };
-    const ghost = { x: 0, y: 0 };
+    const pointer = { x: 0, y: 0, vx: 0, vy: 0, active: false };
     const start = performance.now();
     let prev = start;
 
@@ -116,20 +115,12 @@ export function DotField() {
       ribbon(t, 0.82, 0.78, w * 0.45, -0.4, -4, 4.4, 0.38);
       ribbon(t, 0.55, 0.12, w * 0.35, 0.1, 6, 5.6, 0.25);
 
-      // The vortex: the real pointer, or a ghost one wandering along the word when it's idle.
-      const idle = !pointer.active || now - pointer.last > 2500;
-      const gx = w * (0.5 + 0.32 * Math.sin(t * 0.45)), gy = h * (0.44 + 0.07 * Math.sin(t * 0.9));
-      const vx = idle ? gx : pointer.x;
-      const vy = idle ? gy : pointer.y;
-      // The vortex's own movement, which it hands on to the dots it catches.
-      const mvx = idle ? (gx - ghost.x) : pointer.vx;
-      const mvy = idle ? (gy - ghost.y) : pointer.vy;
-      ghost.x = gx;
-      ghost.y = gy;
+      // The vortex is the pointer: with no one touching the field, the word holds still.
+      const vx = pointer.x, vy = pointer.y;
+      const mvx = pointer.vx, mvy = pointer.vy; // its movement, handed on to the dots it catches
       pointer.vx *= 0.8;
       pointer.vy *= 0.8;
-      // Only the real pointer moves the dots: with no one touching it, the word holds still.
-      const strength = idle ? 0 : 1;
+      const strength = pointer.active ? 1 : 0;
       const radius = Math.min(w, h) * 0.28;
       const ring = radius * 0.4;
 
@@ -172,7 +163,7 @@ export function DotField() {
       }
 
       // A bracket on the pointer, and one hopping around the word on its own.
-      if (!idle) brackets(vx - 70, vy - 50, 140, 100, TAGS[Math.floor(t / 1.2) % TAGS.length], true);
+      if (pointer.active) brackets(vx - 70, vy - 50, 140, 100, TAGS[Math.floor(t / 1.2) % TAGS.length], true);
       const step = Math.floor(t / 1.6);
       const pick = dots.length ? dots[(step * 7919) % dots.length] : { hx: w / 2, hy: h / 2 };
       brackets(pick.hx - 60, pick.hy - 44, 120 + ((step * 37) % 60), 88, TAGS[(step + 3) % TAGS.length], false);
@@ -190,7 +181,6 @@ export function DotField() {
       pointer.x = x;
       pointer.y = y;
       pointer.active = true;
-      pointer.last = performance.now();
     };
     const leave = () => (pointer.active = false);
     el.addEventListener("pointermove", move);
