@@ -7,9 +7,9 @@ import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/rea
  * Rebuilt from "Shortcut Gallery" by Group 256 (x.com/isaacfayemi_,
  * https://x.com/isaacfayemi_/status/2105364159705604137), via lookap 1uhs3o, with Annex's shortcuts.
  *
- * A dark window: a whole Mac keyboard in faint outlines with the keys Annex uses left bright, a
+ * A dark window: a whole keyboard (Mac, or a PC's for Windows and Linux) in faint outlines with the keys Annex uses left bright, a
  * title that names one shortcut at a time with its keys pressed under it, and a bar that flips to
- * a list of every shortcut, a column per group. It plays on its own; click a group or press 0–4 to
+ * a list of every shortcut, a column per group. It plays on its own; click a group or press 0–3 to
  * take over, and your own key presses light the keyboard.
  *
  * Every size is in --u, one pixel of the 1268 × 790 source window, so the whole thing scales as
@@ -44,48 +44,72 @@ type Key =
   | { id: string; k: "m"; a: string; b: string; w?: number }
   | { id: "arrows"; k: "arrows"; w: number };
 
-const chars = (s: string): Key[] => s.split("").map((c) => ({ id: c.toLowerCase(), k: "c", a: c }));
-const ROWS: Key[][] = [
-  [
-    { id: "esc", k: "w", a: "esc", side: "l", w: 1 },
-    ...[..."1234567890"].map((d, i): Key => ({ id: d, k: "n", a: d, b: "!@#$%^&*()"[i] })),
-    { id: "minus", k: "n", a: "-", b: "_" },
-    { id: "equal", k: "n", a: "=", b: "+" },
-    { id: "delete", k: "w", a: "delete", side: "r", w: 1.5 },
-  ],
-  [
-    { id: "tab", k: "w", a: "tab", side: "l", w: 1.5 },
-    ...chars("QWERTYUIOP"),
-    { id: "lbr", k: "n", a: "[", b: "{" },
-    { id: "rbr", k: "n", a: "]", b: "}" },
-    { id: "bslash", k: "n", a: "\\", b: "|" },
-  ],
-  [
-    { id: "caps", k: "w", a: "caps lock", side: "l", w: 1.75 },
-    ...chars("ASDFGHJKL"),
-    { id: "semi", k: "n", a: ";", b: ":" },
-    { id: "quote", k: "n", a: "'", b: '"' },
-    { id: "return", k: "w", a: "return", side: "r", w: 1.75 },
-  ],
-  [
-    { id: "shift", k: "w", a: "shift", side: "l", w: 2.25 },
-    ...chars("ZXCVBNM"),
-    { id: "comma", k: "n", a: ",", b: "<" },
-    { id: "period", k: "n", a: ".", b: ">" },
-    { id: "slash", k: "n", a: "/", b: "?" },
-    { id: "shift-r", k: "w", a: "shift", side: "r", w: 2.25 },
-  ],
-  [
-    { id: "fn", k: "m", a: "◍", b: "fn" },
-    { id: "ctrl", k: "m", a: "⌃", b: "control" },
-    { id: "opt", k: "m", a: "⌥", b: "option" },
-    { id: "cmd", k: "m", a: "⌘", b: "command", w: 1.25 },
-    { id: "space", k: "c", a: "", w: 5 },
-    { id: "cmd-r", k: "m", a: "⌘", b: "command", w: 1.25 },
-    { id: "opt-r", k: "m", a: "⌥", b: "option" },
-    { id: "arrows", k: "arrows", w: 3 },
-  ],
+type Platform = "mac" | "windows" | "linux";
+const PLATFORMS: { id: Platform; name: string }[] = [
+  { id: "mac", name: "Mac" },
+  { id: "windows", name: "Windows" },
+  { id: "linux", name: "Linux" },
 ];
+
+const chars = (s: string): Key[] => s.split("").map((c) => ({ id: c.toLowerCase(), k: "c", a: c }));
+const word = (id: string, a: string, side: "l" | "r", w: number): Key => ({ id, k: "w", a, side, w });
+
+/** A Mac keyboard, or a PC one (Ctrl, Win or Super, Alt) for Windows and Linux. */
+function rowsFor(p: Platform): Key[][] {
+  const mac = p === "mac";
+  return [
+    [
+      word("esc", mac ? "esc" : "Esc", "l", 1),
+      ...[..."1234567890"].map((d, i): Key => ({ id: d, k: "n", a: d, b: "!@#$%^&*()"[i] })),
+      { id: "minus", k: "n", a: "-", b: "_" },
+      { id: "equal", k: "n", a: "=", b: "+" },
+      word("delete", mac ? "delete" : "Backspace", "r", 1.5),
+    ],
+    [
+      word("tab", mac ? "tab" : "Tab", "l", 1.5),
+      ...chars("QWERTYUIOP"),
+      { id: "lbr", k: "n", a: "[", b: "{" },
+      { id: "rbr", k: "n", a: "]", b: "}" },
+      { id: "bslash", k: "n", a: "\\", b: "|" },
+    ],
+    [
+      word("caps", mac ? "caps lock" : "Caps Lock", "l", 1.75),
+      ...chars("ASDFGHJKL"),
+      { id: "semi", k: "n", a: ";", b: ":" },
+      { id: "quote", k: "n", a: "'", b: '"' },
+      word("return", mac ? "return" : "Enter", "r", 1.75),
+    ],
+    [
+      word("shift", mac ? "shift" : "Shift", "l", 2.25),
+      ...chars("ZXCVBNM"),
+      { id: "comma", k: "n", a: ",", b: "<" },
+      { id: "period", k: "n", a: ".", b: ">" },
+      { id: "slash", k: "n", a: "/", b: "?" },
+      word("shift-r", mac ? "shift" : "Shift", "r", 2.25),
+    ],
+    mac
+      ? [
+          { id: "fn", k: "m", a: "◍", b: "fn" },
+          { id: "ctrl", k: "m", a: "⌃", b: "control" },
+          { id: "opt", k: "m", a: "⌥", b: "option" },
+          { id: "cmd", k: "m", a: "⌘", b: "command", w: 1.25 },
+          { id: "space", k: "c", a: "", w: 5 },
+          { id: "cmd-r", k: "m", a: "⌘", b: "command", w: 1.25 },
+          { id: "opt-r", k: "m", a: "⌥", b: "option" },
+          { id: "arrows", k: "arrows", w: 3 },
+        ]
+      : [
+          word("ctrl", "Ctrl", "l", 1.25),
+          word("fn", "Fn", "l", 1),
+          { id: "cmd", k: "m", a: p === "windows" ? "⊞" : "❖", b: p === "windows" ? "Win" : "Super" },
+          word("opt", "Alt", "l", 1.25),
+          { id: "space", k: "c", a: "", w: 4.5 },
+          word("opt-r", "Alt", "r", 1.25),
+          word("ctrl-r", "Ctrl", "r", 1.25),
+          { id: "arrows", k: "arrows", w: 3 },
+        ],
+  ];
+}
 
 // Measured: the keyboard is 990 wide at the bottom and 900 at the number row, 275 tall. A 900-wide
 // board tipped back 20° under a 977 perspective lands on those numbers.
@@ -96,48 +120,54 @@ const PITCH = (BOARD + GAP) / 14.5;
 
 // ---- Annex's shortcuts ---------------------------------------------------------------------------
 
-/** `keys` are keyboard ids; `caps` overrides what the keycaps say; `sep` joins alternatives. */
-type Shortcut = { title: string; keys: string[]; caps?: string[]; sep?: "/" };
-const TABS: { name: string; items: Shortcut[] }[] = [
-  {
-    name: "Sessions",
-    items: [
-      { title: "Leave control of the other computer", keys: ["ctrl", "opt", "shift", "q"] },
-      { title: "Leave a view-only session", keys: ["esc"] },
-    ],
-  },
-  {
-    name: "App",
-    items: [
-      { title: "Open Settings", keys: ["cmd", "comma"] },
-      { title: "Quit Annex", keys: ["cmd", "q"] },
-    ],
-  },
-  {
-    name: "Nearby",
-    items: [
-      { title: "Connect to the selected computer", keys: ["return"] },
-      { title: "Move between computers", keys: ["up", "down"], sep: "/" },
-    ],
-  },
-  {
-    name: "Windows and Linux",
-    items: [
-      { title: "Leave control of the other computer", keys: ["ctrl", "opt", "shift", "q"], caps: ["Ctrl", "Alt", "Shift", "Q"] },
-      { title: "Full screen, on Linux", keys: ["ctrl", "opt", "shift", "f"], caps: ["Ctrl", "Alt", "Shift", "F"] },
-      { title: "Leave a view-only session", keys: ["esc"], caps: ["Esc"] },
-    ],
-  },
-];
-const ALL = TABS.flatMap((t) => t.items);
-const USED = new Set(ALL.flatMap((s) => s.keys));
-const CAP: Record<string, string> = { ctrl: "⌃", opt: "⌥", shift: "⇧", cmd: "⌘", comma: ",", esc: "esc", return: "return", up: "▲", down: "▼" };
-const capOf = (s: Shortcut, i: number) => s.caps?.[i] ?? CAP[s.keys[i]] ?? s.keys[i].toUpperCase();
+/** `keys` are keyboard ids; `sep` joins alternatives. */
+type Shortcut = { title: string; keys: string[]; sep?: "/" };
+type Tab = { name: string; items: Shortcut[] };
+const LEAVE: Shortcut = { title: "Leave control of the other computer", keys: ["ctrl", "opt", "shift", "q"] };
+const VIEW_ONLY: Shortcut = { title: "Leave a view-only session", keys: ["esc"] };
+// Each app's real shortcuts (Mac: AnnexApp, MenuContent, HomeView; Windows: MainWindow and the
+// viewer window; Linux: main.rs and viewer.rs).
+const TABS: Record<Platform, Tab[]> = {
+  mac: [
+    { name: "Sessions", items: [LEAVE, VIEW_ONLY] },
+    {
+      name: "App",
+      items: [
+        { title: "Open Settings", keys: ["cmd", "comma"] },
+        { title: "Quit Annex", keys: ["cmd", "q"] },
+      ],
+    },
+    {
+      name: "Nearby",
+      items: [
+        { title: "Connect to the selected computer", keys: ["return"] },
+        { title: "Move between computers", keys: ["up", "down"], sep: "/" },
+      ],
+    },
+  ],
+  windows: [
+    { name: "Sessions", items: [LEAVE, VIEW_ONLY] },
+    {
+      name: "Typing",
+      items: [
+        { title: "Connect to the address or code you typed", keys: ["return"] },
+        { title: "Save the device name you typed", keys: ["return"] },
+      ],
+    },
+  ],
+  linux: [
+    { name: "Sessions", items: [LEAVE, { title: "Full screen on or off", keys: ["ctrl", "opt", "shift", "f"] }, VIEW_ONLY] },
+    { name: "App", items: [{ title: "Quit Annex", keys: ["ctrl", "q"] }] },
+  ],
+};
+const MAC_CAP: Record<string, string> = { ctrl: "⌃", opt: "⌥", shift: "⇧", cmd: "⌘", comma: ",", esc: "esc", return: "return", up: "▲", down: "▼" };
+const PC_CAP: Record<string, string> = { ctrl: "Ctrl", opt: "Alt", shift: "Shift", esc: "Esc", return: "Enter", up: "▲", down: "▼" };
+const capOf = (p: Platform, s: Shortcut, i: number) => (p === "mac" ? MAC_CAP : PC_CAP)[s.keys[i]] ?? s.keys[i].toUpperCase();
 const REST = "Breeze through Annex";
 
 // What a real key press maps to here (event.code → key id).
 const CODE: Record<string, string> = {
-  Escape: "esc", ControlLeft: "ctrl", ControlRight: "ctrl", AltLeft: "opt", AltRight: "opt-r", ShiftLeft: "shift", ShiftRight: "shift-r",
+  Escape: "esc", ControlLeft: "ctrl", ControlRight: "ctrl-r", AltLeft: "opt", AltRight: "opt-r", ShiftLeft: "shift", ShiftRight: "shift-r",
   MetaLeft: "cmd", MetaRight: "cmd-r", Comma: "comma", Period: "period", Slash: "slash", Enter: "return", Space: "space",
   ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right", Tab: "tab", Backspace: "delete", CapsLock: "caps",
   Minus: "minus", Equal: "equal", BracketLeft: "lbr", BracketRight: "rbr", Backslash: "bslash", Semicolon: "semi", Quote: "quote",
@@ -148,19 +178,21 @@ const idFor = (code: string) => CODE[code] ?? (code.startsWith("Key") ? code.sli
 
 /** One beat of the autoplay: which view, which group, which shortcut (null: the resting title). */
 type Beat = { at: number; view: "keys" | "list"; tab: number; show: [number, number] | null };
-const SCRIPT: Beat[] = [
-  { at: 4, view: "keys", tab: 0, show: [0, 0] },
-  { at: 7, view: "keys", tab: 0, show: null },
-  { at: 8, view: "keys", tab: 1, show: [1, 0] },
-  { at: 10.5, view: "keys", tab: 2, show: [2, 1] },
-  { at: 13, view: "keys", tab: 2, show: null },
-  { at: 14, view: "list", tab: 0, show: null },
-  { at: 15.8, view: "list", tab: 1, show: null },
-  { at: 17, view: "list", tab: 2, show: null },
-  { at: 18.2, view: "list", tab: 3, show: null },
-  { at: 19.6, view: "keys", tab: 0, show: null },
-  { at: 24, view: "keys", tab: 0, show: null },
-];
+/** Each group's first shortcut on the keyboard, then a tour of the list, then a rest. */
+function scriptFor(tabs: Tab[]): Beat[] {
+  const beats: Beat[] = [];
+  let at = 0;
+  const add = (view: Beat["view"], tab: number, show: Beat["show"], hold: number) => {
+    beats.push({ at, view, tab, show });
+    at += hold;
+  };
+  tabs.forEach((_, i) => add("keys", i, [i, 0], 2.8));
+  add("keys", 0, null, 1);
+  tabs.forEach((_, i) => add("list", i, null, i ? 1.3 : 1.8));
+  add("keys", 0, null, 4.4);
+  add("keys", 0, null, 0);
+  return beats;
+}
 
 /** Intro stages: 1 outlines fade in, 2 the title resolves, 3 labels appear, 4 unused keys dim. */
 const STAGES: [number, number][] = [[0, 1], [0.6, 2], [1.5, 3], [3, 4]];
@@ -177,7 +209,19 @@ export function KeyboardGallery() {
   const [lit, setLit] = useState<string[]>([]); // the shown shortcut's keys still held down
   const [held, setHeld] = useState<Set<string>>(new Set());
   const [auto, setAuto] = useState(true);
+  const [platform, setPlatform] = useState<Platform>("mac");
   const started = useRef(false);
+  const tabs = TABS[platform];
+  const all = tabs.flatMap((t) => t.items);
+  const used = new Set(all.flatMap((s) => s.keys));
+
+  // Start on the visitor's own system.
+  useEffect(() => {
+    const nav = navigator as Navigator & { userAgentData?: { platform: string } };
+    const ua = nav.userAgentData?.platform || nav.userAgent;
+    if (/win/i.test(ua)) setPlatform("windows");
+    else if (/linux|x11|cros/i.test(ua) && !/android/i.test(ua)) setPlatform("linux");
+  }, []);
 
   // Narrow columns (phones) get the phone layout.
   useEffect(() => {
@@ -200,20 +244,22 @@ export function KeyboardGallery() {
   // The autoplay: walk the script while it's on screen, then loop.
   useEffect(() => {
     if (reduce || !auto || !inView || stage < 4) return;
+    const groups = TABS[platform];
+    const script = scriptFor(groups);
     let i = 0;
     let t: ReturnType<typeof setTimeout>;
     const run = () => {
-      const b = SCRIPT[i];
+      const b = script[i];
       setView(b.view);
       setTab(b.tab);
-      setShow(b.show ? TABS[b.show[0]].items[b.show[1]] : null);
-      const wait = i + 1 < SCRIPT.length ? SCRIPT[i + 1].at - b.at : 0.01;
-      i = (i + 1) % SCRIPT.length;
+      setShow(b.show ? groups[b.show[0]].items[b.show[1]] : null);
+      const wait = i + 1 < script.length ? script[i + 1].at - b.at : 0.01;
+      i = (i + 1) % script.length;
       t = setTimeout(run, wait * 1000);
     };
     t = setTimeout(run, 1000);
     return () => clearTimeout(t);
-  }, [auto, inView, reduce, stage]);
+  }, [auto, inView, reduce, stage, platform]);
 
   // A shown shortcut's keys press together, then let go one by one.
   useEffect(() => {
@@ -229,7 +275,7 @@ export function KeyboardGallery() {
     setShow(null);
   };
 
-  // Your own keys light the keyboard; while it's in view, 0 flips the view and 1–4 pick a group.
+  // Your own keys light the keyboard; while it's in view, 0 flips the view and 1–3 pick a group.
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       const id = idFor(e.code);
@@ -240,7 +286,7 @@ export function KeyboardGallery() {
       if (n === "0") {
         takeOver();
         setView((v) => (v === "keys" ? "list" : "keys"));
-      } else if (n && +n >= 1 && +n <= TABS.length) {
+      } else if (n && +n >= 1 && +n <= TABS[platform].length) {
         takeOver();
         setTab(+n - 1);
         setView("list");
@@ -263,13 +309,19 @@ export function KeyboardGallery() {
       window.removeEventListener("keyup", up);
       window.removeEventListener("blur", clear);
     };
-  }, [inView]);
+  }, [inView, platform]);
 
   // Pressing a whole shortcut yourself names it.
-  const yours = ALL.find((s) => s.keys.length > 1 && s.keys.every((k) => held.has(k)));
+  const yours = all.find((s) => s.keys.length > 1 && s.keys.every((k) => held.has(k)));
   const shown = yours ?? show;
   const pressed = new Set([...held, ...lit]);
   const list = view === "list";
+  const choose = (p: Platform) => {
+    setPlatform(p);
+    setTab(0);
+    setShow(null);
+    setView("keys");
+  };
 
   return (
     <div ref={root} className="@container w-full">
@@ -296,7 +348,7 @@ export function KeyboardGallery() {
               {shown &&
                 shown.keys.map((k, i) => (
                   <motion.span
-                    key={`${shown.title}${shown.caps ? "w" : ""}${i}`}
+                    key={`${platform}${shown.title}${i}`}
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
@@ -305,19 +357,19 @@ export function KeyboardGallery() {
                     style={{ gap: u(4) }}
                   >
                     {i > 0 && shown.sep && <span style={{ fontSize: u(L.capText) }} className="text-white/40">{shown.sep}</span>}
-                    <Cap label={capOf(shown, i)} glow={pressed.has(k)} size={L.cap} text={L.capText} />
+                    <Cap label={capOf(platform, shown, i)} glow={pressed.has(k)} size={L.cap} text={L.capText} />
                   </motion.span>
                 ))}
             </AnimatePresence>
           </div>
-          <Keyboard stage={stage} pressed={pressed} top={L.kbTop} scale={L.kbScale} />
+          <Keyboard rows={rowsFor(platform)} used={used} stage={stage} pressed={pressed} top={L.kbTop} scale={L.kbScale} />
         </div>
 
         {/* The list view: a column per group, the chosen one in the middle. */}
         <div className={`absolute inset-0 ${list ? "" : "pointer-events-none"}`} aria-hidden={!list}>
-          {TABS.map((t, c) => (
+          {tabs.map((t, c) => (
             <div
-              key={t.name}
+              key={platform + t.name}
               style={{
                 left: `calc(50% - ${u(L.colW / 2)})`,
                 top: u(L.listTop),
@@ -346,7 +398,7 @@ export function KeyboardGallery() {
                       {s.keys.map((_, i) => (
                         <span key={i} className="flex items-center" style={{ gap: u(4) }}>
                           {i > 0 && s.sep && <span style={{ fontSize: u(L.capText) }} className="opacity-50">{s.sep}</span>}
-                          <Cap label={capOf(s, i)} size={L.listCap} text={L.capText * 0.92} dim={c !== tab} />
+                          <Cap label={capOf(platform, s, i)} size={L.listCap} text={L.capText * 0.92} dim={c !== tab} />
                         </span>
                       ))}
                     </span>
@@ -354,6 +406,26 @@ export function KeyboardGallery() {
                 );
               })}
             </div>
+          ))}
+        </div>
+
+        {/* Which keyboard: Mac, or a PC's for Windows and Linux. */}
+        <div
+          role="group"
+          aria-label="Keyboard"
+          style={{ right: u(19), top: u(L.compactTabs ? 20 : 17), height: u(L.badge + 3), gap: u(L.compactTabs ? 16 : 18), fontSize: u(L.barText) }}
+          className="absolute flex items-center"
+        >
+          {PLATFORMS.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              aria-pressed={platform === p.id}
+              onClick={() => choose(p.id)}
+              className={`transition-colors duration-200 ${platform === p.id ? "text-white" : "text-[#8a8a8a] hover:text-white/80"}`}
+            >
+              {p.name}
+            </button>
           ))}
         </div>
 
@@ -376,9 +448,9 @@ export function KeyboardGallery() {
           style={{ top: u(list ? L.barList : L.barKeys), height: u(L.badge + 3), gap: u(L.compactTabs ? 14 : 26), transition: `top 600ms ${EASE}` }}
           className="absolute inset-x-0 flex items-center justify-center"
         >
-          {TABS.map((t, i) => (
+          {tabs.map((t, i) => (
             <button
-              key={t.name}
+              key={platform + t.name}
               type="button"
               aria-pressed={list && i === tab}
               aria-label={L.compactTabs && i !== tab ? t.name : undefined}
@@ -479,7 +551,7 @@ function Badge({ n, on, size }: { n: number; on: boolean; size: number }) {
 }
 
 /** The keyboard, tipped back so the bottom row is wider than the number row. */
-function Keyboard({ stage, pressed, top, scale }: { stage: number; pressed: Set<string>; top: number; scale: number }) {
+function Keyboard({ rows, used, stage, pressed, top, scale }: { rows: Key[][]; used: Set<string>; stage: number; pressed: Set<string>; top: number; scale: number }) {
   return (
     <div
       aria-hidden="true"
@@ -493,10 +565,10 @@ function Keyboard({ stage, pressed, top, scale }: { stage: number; pressed: Set<
         transition: "opacity 500ms ease-out",
       }}
     >
-      {ROWS.map((row, r) => (
+      {rows.map((row, r) => (
         <div key={r} className="flex" style={{ gap: u(GAP), marginTop: r ? u(GAP) : 0 }}>
           {row.map((k) => (
-            <KeyCap key={k.id} k={k} stage={stage} pressed={pressed} />
+            <KeyCap key={k.id} k={k} used={used} stage={stage} pressed={pressed} />
           ))}
         </div>
       ))}
@@ -504,12 +576,12 @@ function Keyboard({ stage, pressed, top, scale }: { stage: number; pressed: Set<
   );
 }
 
-function KeyCap({ k, stage, pressed }: { k: Key; stage: number; pressed: Set<string> }) {
+function KeyCap({ k, used, stage, pressed }: { k: Key; used: Set<string>; stage: number; pressed: Set<string> }) {
   const width = u((k.w ?? 1) * PITCH - GAP);
   if (k.k === "arrows") {
     const half = (KEY_H - 4) / 2;
     const one = (id: string, label: string) => (
-      <Face id={id} stage={stage} pressed={pressed} style={{ flex: 1, height: u(half) }}>
+      <Face id={id} used={used} stage={stage} pressed={pressed} style={{ flex: 1, height: u(half) }}>
         <span style={{ fontSize: u(7) }}>{label}</span>
       </Face>
     );
@@ -525,7 +597,7 @@ function KeyCap({ k, stage, pressed }: { k: Key; stage: number; pressed: Set<str
     );
   }
   return (
-    <Face id={k.id} stage={stage} pressed={pressed} style={{ width, height: u(KEY_H) }}>
+    <Face id={k.id} used={used} stage={stage} pressed={pressed} style={{ width, height: u(KEY_H) }}>
       {k.k === "c" && <span style={{ fontSize: u(14) }}>{k.a}</span>}
       {k.k === "n" && (
         <span className="flex flex-col items-center leading-none" style={{ gap: u(4) }}>
@@ -549,9 +621,9 @@ function KeyCap({ k, stage, pressed }: { k: Key; stage: number; pressed: Set<str
 }
 
 /** One key's face: outlines first, then labels, then everything but Annex's keys dims. */
-function Face({ id, stage, pressed, style, children }: { id: string; stage: number; pressed: Set<string>; style: React.CSSProperties; children: React.ReactNode }) {
+function Face({ id, used: inUse, stage, pressed, style, children }: { id: string; used: Set<string>; stage: number; pressed: Set<string>; style: React.CSSProperties; children: React.ReactNode }) {
   const on = pressed.has(id);
-  const used = USED.has(id);
+  const used = inUse.has(id);
   const line = on ? 0.85 : stage < 3 ? 0.13 : stage < 4 ? 0.07 : used ? 0.16 : 0.05;
   const ink = on ? 1 : stage < 3 ? 0 : stage < 4 || used ? 0.88 : 0.28;
   return (
