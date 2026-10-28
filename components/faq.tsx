@@ -13,7 +13,7 @@ const QUESTIONS = [
   },
   {
     q: "What does Annex send to its servers?",
-    a: "On your own network, nothing. With an internet code, our server only swaps the two computers' addresses. The only other request is the update check to GitHub, which you can turn off.",
+    a: "On your own network, nothing. With an internet code, our server only swaps the two computers' addresses. If a network blocks a direct link, our relay passes the session on, still encrypted: nothing is stored or seen. The only other request is the update check to GitHub, which you can turn off.",
   },
 ];
 

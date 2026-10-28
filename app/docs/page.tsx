@@ -64,7 +64,13 @@ const FEATURES: Feature[] = [
       <>On the other, choose <Ui>Connect by Code or Address…</Ui> and type the code. It works once, for 10 minutes.</>,
       <>The first time, type the PIN too.</>,
     ],
-    note: <>Strict networks can block a direct link: add your own relay under <Ui>Internet</Ui> in Settings.</>,
+    note: (
+      <>
+        The relay is used only when a network blocks a direct link (some internet providers, college and office
+        networks). It stays encrypted: nothing you share is stored or seen. Limits: 20 minutes per session, about 6 Mbit/s, and 2 sessions a day per sharing
+        computer (20 in total). Your own relay, under <Ui>Internet</Ui> in Settings, has no limits.
+      </>
+    ),
   },
   {
     id: "cable",
