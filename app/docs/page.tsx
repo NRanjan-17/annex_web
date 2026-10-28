@@ -73,6 +73,37 @@ const FEATURES: Feature[] = [
     ),
   },
   {
+    id: "own-server",
+    title: "Your own server and relay",
+    what: "Use your own code server or relay instead of Annex's.",
+    steps: [
+      <>Open <Ui>Internet</Ui> in Settings.</>,
+      <><Ui>Server</Ui>: your code server&apos;s address, like <Code>wss://rendezvous.example.com</Code>. Set the same on both computers.</>,
+      <><Ui>Your relay</Ui>: a TURN server, like <Code>turn:relay.example.com:3478</Code>, then its username and password. The sharing computer is the one that needs it.</>,
+    ],
+    note: (
+      <>
+        Leave both empty to use Annex&apos;s. The code server is a small Cloudflare Worker in the repository; any standard
+        TURN server works as a relay. Step by step: the{" "}
+        <a className="underline-offset-4 hover:underline" href="https://github.com/NRanjan-17/annex/blob/main/docs/GUIDE.md#your-own-code-server-and-relay">
+          guide
+        </a>
+        .
+      </>
+    ),
+  },
+  {
+    id: "hevc",
+    title: "A sharper picture (HEVC)",
+    what: "When both computers support HEVC, the picture is sharper at the same speed. Otherwise it's H.264.",
+    steps: [
+      <>Nothing to do: it&apos;s on by default, in <Ui>Settings → HEVC</Ui>.</>,
+      <>Windows: to receive HEVC, install the <Ui>HEVC Video Extensions</Ui> from the Microsoft Store if your PC doesn&apos;t have them.</>,
+      <>Linux: install <Code>gstreamer1.0-libav</Code> to receive it. Sending needs an HEVC encoder on the graphics chip.</>,
+    ],
+    note: <>When several computers watch one screen, it&apos;s HEVC only while all of them support it.</>,
+  },
+  {
     id: "cable",
     title: "Cable",
     what: "The fastest link. Annex uses it by itself when one is plugged in.",
@@ -271,7 +302,7 @@ export default function DocsPage() {
           </section>
 
           <section className="mt-24" aria-labelledby="try">
-            <Heading id="try" label="Try every feature" title="Fourteen things to try, a minute each." />
+            <Heading id="try" label="Try every feature" title="Sixteen things to try, a minute each." />
             <div className="mt-8 grid gap-3 md:grid-cols-2">
               {FEATURES.map((f, i) => (
                 <Reveal key={f.id} delay={(i % 2) * 0.06} className="group-surface p-6">

@@ -12,6 +12,10 @@ const QUESTIONS = [
     a: "Only a cable that makes a network link: Thunderbolt or USB4 between Macs, or Ethernet (with an adapter if needed) for everything else.",
   },
   {
+    q: "How sharp is the picture?",
+    a: "Up to 2560×1600 at 60 frames a second when mirroring, and Extend follows the other screen's refresh rate, up to 240 Hz. When both computers support HEVC the picture goes as HEVC, sharper at the same speed; otherwise H.264.",
+  },
+  {
     q: "What does Annex send to its servers?",
     a: "On your own network, nothing. With an internet code, our server only swaps the two computers' addresses. If a network blocks a direct link, our relay passes the session on, still encrypted: nothing is stored or seen. The only other request is the update check to GitHub, which you can turn off.",
   },
