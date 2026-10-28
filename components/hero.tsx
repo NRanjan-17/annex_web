@@ -1,54 +1,30 @@
-import { ConnectionField } from "./connection-field";
 import { CopyCommand } from "./copy-command";
+import { DotField } from "./dot-field";
 import { DownloadForThisComputer } from "./download-button";
 import { INSTALL } from "./links";
 import { Reveal } from "./reveal";
 
-/** After Oğuz Yağız Kara's shader-driven hero (lookap x0r410): the words on the left, and on the
- *  right a field of bars that builds two screens and the link between them, over a faint grid. */
+/** After the first of shaders' "Shader Blocks" (lookap 1u0ife): a full-screen field with a
+ *  dot-matrix "annex" you can stir with the pointer, and the words at the bottom left. */
 export function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-white/[0.06] pt-16">
-      {/* The faint grid the field sits on. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgb(255_255_255/0.04)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255/0.04)_1px,transparent_1px)] bg-[size:92px_92px] [mask-image:radial-gradient(ellipse_at_70%_45%,black_30%,transparent_75%)]"
-      />
-      <div className="relative mx-auto grid max-w-6xl items-center gap-6 px-5 py-16 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-[1fr_1.15fr] lg:py-10">
-        <div className="relative z-10">
-          <Reveal className="eyebrow flex items-center gap-2.5">
-            <span className="live-dot" aria-hidden="true" />
-            Free and open source
+    <section className="relative h-svh min-h-[620px] overflow-hidden bg-black">
+      <DotField />
+      <h1 className="sr-only">Annex: your other computer is a second screen</h1>
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-black via-black/60 to-transparent pt-32">
+        <div className="mx-auto max-w-6xl px-5 pb-12 sm:pb-16">
+          <Reveal delay={0.2} as="p" className="pointer-events-auto max-w-md text-[17px] leading-relaxed text-fg/90">
+            Annex turns your other computer into a second screen, or shows its screen on yours. Mac, Windows and Linux,
+            over your network, a cable or the internet, encrypted end to end.
           </Reveal>
-          <h1 className="mt-6 text-[clamp(2.6rem,6vw,4.5rem)] font-semibold leading-[0.98] tracking-[-0.045em]">
-            <Reveal as="span" delay={0.1} className="block">
-              Your other computer
-            </Reveal>
-            <Reveal as="span" delay={0.2} className="block bg-linear-to-b from-white to-white/55 bg-clip-text pb-1 text-transparent">
-              is a second screen.
-            </Reveal>
-          </h1>
-          <Reveal delay={0.3} as="p" className="mt-6 max-w-[34rem] text-lg leading-relaxed text-dim">
-            Extend your display onto another computer, or mirror its screen.{" "}
-            <strong className="font-medium text-fg">Mac, Windows and Linux</strong>, over your network, a cable or the
-            internet. <strong className="font-medium text-fg">Encrypted end to end.</strong>
-          </Reveal>
-          <Reveal delay={0.4} className="mt-9 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+          <Reveal delay={0.3} className="pointer-events-auto mt-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
             <DownloadForThisComputer />
             <CopyCommand command={INSTALL.unix} short="curl -fsSL …/install.sh | sh" />
-          </Reveal>
-          <Reveal delay={0.5} as="p" className="mt-5 text-[13px] text-faint">
-            macOS 14+ · Windows 10 and 11 · Linux x86_64 and arm64
+            <a href="/docs" className="font-mono text-[13px] text-dim transition-colors duration-150 hover:text-fg sm:ml-2">
+              Read the docs →
+            </a>
           </Reveal>
         </div>
-
-        <Reveal delay={0.2} className="relative aspect-square w-full max-lg:max-h-[480px] lg:aspect-[1/0.92]">
-          <ConnectionField />
-          {/* A narrow rail label, as in the reference. */}
-          <span className="absolute -right-1 top-2 hidden font-mono text-[10px] tracking-[0.2em] text-faint [writing-mode:vertical-rl] lg:block">
-            CONNECTION · LIVE
-          </span>
-        </Reveal>
       </div>
     </section>
   );
