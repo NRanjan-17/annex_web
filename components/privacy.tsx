@@ -5,7 +5,7 @@ const FACTS = [
   { title: "Codes only introduce", body: "Over the internet, our server swaps two addresses. It never sees your screen." },
 ];
 
-/** One floating glass panel over a faint light: the only glass on the page. */
+/** A bracketed frame over a faint light, in the hero's style. */
 export function Privacy() {
   return (
     <section id="privacy" aria-labelledby="privacy-title" className="relative mx-auto max-w-6xl px-5 py-20 md:py-28">
@@ -13,9 +13,9 @@ export function Privacy() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-1/2 mx-auto h-72 max-w-3xl -translate-y-1/2 rounded-full bg-white/[0.07] blur-[120px]"
       />
-      <div className="relative grid gap-10 rounded-[28px] bg-white/[0.04] p-8 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.1),inset_0_1px_0_rgb(255_255_255/0.12),0_40px_80px_-40px_rgb(0_0_0)] backdrop-blur-2xl md:grid-cols-[1fr_1.1fr] md:p-12">
+      <div className="group-surface relative grid gap-10 p-8 md:grid-cols-[1fr_1.1fr] md:p-12">
         <div>
-          <p className="eyebrow">Privacy</p>
+          <p className="eyebrow eyebrow-num">Privacy</p>
           <h2 id="privacy-title" className="mt-3 text-[clamp(1.9rem,4vw,2.75rem)] font-semibold leading-[1.05] tracking-[-0.035em]">
             Your screen goes from one computer to the other. Nowhere else.
           </h2>

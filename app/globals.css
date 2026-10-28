@@ -24,6 +24,9 @@
     scroll-behavior: smooth;
     scroll-padding-top: 88px;
   }
+  main {
+    counter-reset: section;
+  }
   body {
     background: var(--color-ink);
     color: var(--color-fg);
@@ -109,19 +112,48 @@
   .chip:hover { background: rgb(255 255 255 / 0.08); }
   .chip:active { scale: 0.96; }
 
+  /* Small labels are mono, like the hero's tags. */
   .eyebrow {
+    font-family: var(--font-mono);
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
+    font-weight: 500;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-faint);
   }
+  /* Section labels count themselves: "01 · Features". */
+  .eyebrow-num::before {
+    counter-increment: section;
+    content: counter(section, decimal-leading-zero) " · ";
+    color: var(--color-fg);
+  }
 
-  /* A flat group, like the apps' settings groups. */
+  /* A frame like the hero's detection boxes: black, a hairline, a faint dot texture and
+     corner brackets. */
   .group-surface {
-    border-radius: 20px;
-    background: rgb(255 255 255 / 0.035);
-    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08) inset;
+    position: relative;
+    border-radius: 6px;
+    background:
+      radial-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1.2px) 0 0 / 14px 14px,
+      rgb(255 255 255 / 0.015);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.07) inset;
+  }
+  .group-surface::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    pointer-events: none;
+    border-radius: inherit;
+    --b: rgb(255 255 255 / 0.55);
+    background:
+      linear-gradient(var(--b), var(--b)) top left / 12px 1px no-repeat,
+      linear-gradient(var(--b), var(--b)) top left / 1px 12px no-repeat,
+      linear-gradient(var(--b), var(--b)) top right / 12px 1px no-repeat,
+      linear-gradient(var(--b), var(--b)) top right / 1px 12px no-repeat,
+      linear-gradient(var(--b), var(--b)) bottom left / 12px 1px no-repeat,
+      linear-gradient(var(--b), var(--b)) bottom left / 1px 12px no-repeat,
+      linear-gradient(var(--b), var(--b)) bottom right / 12px 1px no-repeat,
+      linear-gradient(var(--b), var(--b)) bottom right / 1px 12px no-repeat;
   }
 
   .live-dot {

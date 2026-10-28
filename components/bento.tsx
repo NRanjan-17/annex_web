@@ -7,7 +7,7 @@ import { Spotlight } from "./spotlight";
 function Cell({ title, body, wide, children }: { title: string; body: string; wide?: boolean; children: React.ReactNode }) {
   return (
     <Spotlight
-      className={`flex min-h-64 flex-col justify-between gap-8 rounded-[20px] bg-linear-to-b from-white/[0.055] to-white/[0.02] p-6 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.07),inset_0_1px_0_rgb(255_255_255/0.06)] ${wide ? "md:col-span-2" : ""}`}
+      className={`group-surface flex min-h-64 flex-col justify-between gap-8 p-6 ${wide ? "md:col-span-2" : ""}`}
     >
       <div className="flex flex-1 items-center justify-center" aria-hidden="true">
         {children}

@@ -18,7 +18,7 @@ export function Section({
   return (
     <section id={id} aria-labelledby={id ? `${id}-title` : undefined} className={`mx-auto px-5 py-20 md:py-28 ${narrow ? "max-w-3xl" : "max-w-6xl"}`}>
       <Reveal>
-        <p className="eyebrow">{label}</p>
+        <p className="eyebrow eyebrow-num">{label}</p>
         <h2 id={id ? `${id}-title` : undefined} className="mt-3 max-w-3xl text-[clamp(1.9rem,4vw,2.75rem)] font-semibold leading-[1.05] tracking-[-0.035em]">
           {title}
         </h2>

@@ -2,6 +2,7 @@ import { Backdrop } from "@/components/backdrop";
 import { Nav } from "@/components/nav";
 import { Hero } from "@/components/hero";
 import { Stage } from "@/components/stage";
+import { Stats } from "@/components/stats";
 import { Bento } from "@/components/bento";
 import { Steps } from "@/components/steps";
 import { Privacy } from "@/components/privacy";
@@ -17,6 +18,7 @@ export default function Home() {
       <Nav />
       <main id="main">
         <Hero />
+        <Stats />
         <Stage />
         <Bento />
         <Steps />

@@ -36,7 +36,7 @@ export function Cta() {
           {NODES.map(({ label, Icon, className }) => (
             <span
               key={label}
-              className={`absolute flex items-center gap-2.5 rounded-[14px] bg-linear-to-b from-[#232327] to-[#161618] px-4 py-3 text-sm font-medium shadow-[inset_0_0_0_1px_rgb(255_255_255/0.1),inset_0_1px_0_rgb(255_255_255/0.08),0_20px_40px_-20px_rgb(0_0_0)] ${className}`}
+              className={`group-surface absolute flex items-center gap-2.5 bg-black px-4 py-3 font-mono text-[12px] uppercase tracking-[0.08em] ${className}`}
             >
               <Icon className="size-[18px]" />
               {label}
