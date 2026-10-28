@@ -104,7 +104,8 @@ export function DotField() {
     };
 
     const draw = (now: number) => {
-      const t = reduce ? 6 : (now - start) / 1000;
+      // The first frame's timestamp can be a hair before `start`: never let time run negative.
+      const t = reduce ? 6 : Math.max(0, now - start) / 1000;
       const dt = Math.min(0.05, (now - prev) / 1000);
       prev = now;
       ctx.clearRect(0, 0, w, h);
@@ -165,7 +166,7 @@ export function DotField() {
       // A bracket on the pointer, and one hopping around the word on its own.
       if (pointer.active) brackets(vx - 70, vy - 50, 140, 100, TAGS[Math.floor(t / 1.2) % TAGS.length], true);
       const step = Math.floor(t / 1.6);
-      const pick = dots.length ? dots[(step * 7919) % dots.length] : { hx: w / 2, hy: h / 2 };
+      const pick = dots.length ? dots[(((step * 7919) % dots.length) + dots.length) % dots.length] : { hx: w / 2, hy: h / 2 };
       brackets(pick.hx - 60, pick.hy - 44, 120 + ((step * 37) % 60), 88, TAGS[(step + 3) % TAGS.length], false);
 
       if (!reduce && visible) raf = requestAnimationFrame(draw);
