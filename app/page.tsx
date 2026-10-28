@@ -2,6 +2,7 @@ import { Backdrop } from "@/components/backdrop";
 import { Nav } from "@/components/nav";
 import { Hero } from "@/components/hero";
 import { Stage } from "@/components/stage";
+import { StreamBlock } from "@/components/stream-block";
 import { Bento } from "@/components/bento";
 import { Steps } from "@/components/steps";
 import { Privacy } from "@/components/privacy";
@@ -17,6 +18,7 @@ export default function Home() {
       <Nav />
       <main id="main">
         <Hero />
+        <StreamBlock />
         <Stage />
         <Bento />
         <Steps />
