@@ -288,7 +288,7 @@ export default function DocsPage() {
             <Heading id="shortcuts" label="Shortcuts" title="Keys worth knowing." />
             <div className="group-surface mt-8 divide-y divide-white/[0.06]">
               {SHORTCUTS.map((s) => (
-                <div key={s.what + s.where} className="flex flex-wrap items-center gap-x-6 gap-y-3 px-5 py-4">
+                <div key={s.what + s.where} className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:gap-6">
                   <span className="flex gap-1.5">
                     {s.keys.map((k) => (
                       <Key key={k} wide={k.length > 2}>
@@ -296,8 +296,10 @@ export default function DocsPage() {
                       </Key>
                     ))}
                   </span>
-                  <span className="flex-1 text-[15px]">{s.what}</span>
-                  <span className="text-[13px] text-faint">{s.where}</span>
+                  <span className="flex flex-1 flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <span className="text-[15px]">{s.what}</span>
+                    <span className="text-[13px] text-faint">{s.where}</span>
+                  </span>
                 </div>
               ))}
             </div>

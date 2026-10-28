@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import { GitHubIcon } from "./icons";
+import { AnnexMark, GitHubIcon } from "./icons";
 import { REPO } from "./links";
 
 const SECTIONS = [
@@ -41,9 +40,9 @@ export function Nav() {
         solid ? "border-b border-white/[0.07] bg-black/75 backdrop-blur-xl backdrop-saturate-150" : "border-b border-transparent"
       }`}
     >
-      <div className="mx-auto grid h-16 max-w-6xl grid-cols-[1fr_auto_1fr] items-center px-5">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 md:grid md:grid-cols-[1fr_auto_1fr]">
         <a href="/" className="flex items-center gap-2.5 justify-self-start font-semibold tracking-tight">
-          <Image src="/assets/icon.png" alt="" width={26} height={26} />
+          <AnnexMark className="h-[19px] w-auto" />
           Annex
         </a>
 

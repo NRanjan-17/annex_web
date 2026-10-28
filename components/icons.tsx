@@ -127,3 +127,18 @@ export function LinuxIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+/** Annex's mark without its tile: two screens, the front one on a stand (traced from the app icon). */
+export function AnnexMark({ className }: IconProps) {
+  return (
+    <svg viewBox="120 150 276 234" className={className} aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="18" strokeLinecap="round">
+      <mask id="annex-mark-gap">
+        <rect x="120" y="150" width="276" height="234" fill="#fff" />
+        <rect x="186" y="201" width="214" height="150" rx="30" fill="#000" />
+      </mask>
+      <rect x="139" y="168" width="184" height="123" rx="20" mask="url(#annex-mark-gap)" />
+      <rect x="209" y="224" width="167" height="102" rx="18" />
+      <path d="M290 335v34M256 371h68" />
+    </svg>
+  );
+}

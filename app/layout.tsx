@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Annex: use another computer as a second screen",
   description,
   applicationName: "Annex",
-  icons: { icon: "/assets/favicon-64.png", apple: "/assets/icon-256.png" },
+  icons: { icon: [{ url: "/assets/mark.svg", type: "image/svg+xml" }, { url: "/assets/favicon-64.png", sizes: "64x64" }], apple: "/assets/icon-256.png" },
   openGraph: {
     title: "Annex",
     description: "Use another computer as a second screen. Mac, Windows and Linux, encrypted end to end.",

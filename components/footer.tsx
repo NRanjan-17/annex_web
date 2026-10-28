@@ -32,7 +32,7 @@ const COLUMNS = [
 export function Footer() {
   return (
     <footer className="overflow-hidden">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 pt-20 sm:grid-cols-2 md:grid-cols-4">
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-10 px-5 pt-20 md:grid-cols-4">
         {COLUMNS.map((c) => (
           <nav key={c.title} aria-label={c.title}>
             <p className="text-sm font-medium text-fg">{c.title}</p>
@@ -47,7 +47,7 @@ export function Footer() {
             </ul>
           </nav>
         ))}
-        <div>
+        <div className="col-span-2 md:col-span-1">
           <p className="text-sm font-medium text-fg">Privacy</p>
           <p className="mt-4 text-sm leading-6 text-faint">
             Annex has no accounts and no tracking. Your screen only ever goes between your own computers.
@@ -75,7 +75,7 @@ export function Footer() {
           ANNEX
         </text>
       </svg>
-      <p className="pb-8 text-center text-xs text-faint">© {new Date().getFullYear()} Nalinish Ranjan</p>
+      <p className="pb-8 text-center text-xs text-faint">© {new Date().getFullYear()} Annex</p>
     </footer>
   );
 }
