@@ -67,8 +67,8 @@ const FEATURES: Feature[] = [
     note: (
       <>
         The relay is used only when a network blocks a direct link (some internet providers, college and office
-        networks). It stays encrypted: nothing you share is stored or seen. Limits: 20 minutes per session, about 6 Mbit/s, and 2 sessions a day per sharing
-        computer (20 in total). Your own relay, under <Ui>Internet</Ui> in Settings, has no limits.
+        networks). It stays encrypted: nothing you share is stored or seen. Limit: 10 relayed sessions a day per
+        sharing computer. Your own relay, under <Ui>Internet</Ui> in Settings, has none.
       </>
     ),
   },
