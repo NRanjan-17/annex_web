@@ -5,9 +5,9 @@ import { useEffect, useRef } from "react";
 /**
  * The hero's field, after the first of shaders' "Shader Blocks" (lookap 1u0ife): point-cloud
  * ribbons fold and drift behind a dot-matrix "annex". The pointer is a vortex: dots near it are
- * pulled into a swirling loop around it and spring home when it leaves. With no pointer, a ghost one
- * wanders along the word. Corner brackets mark the pointer and hop around the word with live tags.
- * Canvas 2D; paused off screen; one still frame with Reduce motion.
+ * pulled into a swirling loop around it, stream away for a moment and drift home when it leaves. Corner brackets mark the pointer and hop around the word with live tags.
+ * The dots move only when the pointer touches them. Canvas 2D; paused off screen; one still
+ * frame with Reduce motion.
  */
 
 const WORD = "annex";
@@ -128,7 +128,8 @@ export function DotField() {
       ghost.y = gy;
       pointer.vx *= 0.8;
       pointer.vy *= 0.8;
-      const strength = idle ? 0.6 + 0.4 * Math.sin(t * 0.6) : 1;
+      // Only the real pointer moves the dots: with no one touching it, the word holds still.
+      const strength = idle ? 0 : 1;
       const radius = Math.min(w, h) * 0.28;
       const ring = radius * 0.4;
 
