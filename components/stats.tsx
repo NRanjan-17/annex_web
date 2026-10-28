@@ -8,8 +8,9 @@ import { Reveal } from "./reveal";
 
 const STATS = [
   { value: "~8", unit: "ms", label: "From one screen\nto the other" },
-  { value: "144", unit: "Hz", label: "Or whatever rate\nthe screen runs" },
-  { value: "3", unit: "", label: "Systems, in any\ncombination" },
+  // Extend follows the viewing screen's own rate, up to 240 Hz (120 when Linux shares); Mirror runs at 60.
+  { value: "240", unit: "Hz", label: "Extend matches the\nscreen's rate, up to" },
+  { value: "3", unit: "", label: "Operating systems.\nAny two connect." },
   { value: "0", unit: "", label: "Accounts, servers in\nthe way or trackers" },
 ];
 
