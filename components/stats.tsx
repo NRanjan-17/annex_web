@@ -11,7 +11,7 @@ const STATS = [
   // Extend follows the viewing screen's own rate, up to 240 Hz (120 when Linux shares); Mirror runs at 60.
   { value: "240", unit: "Hz", label: "Extend matches the\nscreen's rate, up to" },
   { value: "3", unit: "", label: "Operating systems.\nAny two connect." },
-  { value: "0", unit: "", label: "Accounts, servers in\nthe way or trackers" },
+  { value: "0", unit: "", label: "Accounts to make,\nor trackers" },
 ];
 
 export function Stats() {
