@@ -74,7 +74,7 @@ export function Stage() {
         onFocusCapture={() => setPaused(true)}
         onBlurCapture={() => setPaused(false)}
       >
-        <div role="tablist" aria-label="Modes" className="flex justify-center gap-1 pb-3 pt-1">
+        <div role="tablist" aria-label="Modes" className="flex justify-center gap-0.5 pb-3 pt-1 sm:gap-1">
           {MODES.map((m) => (
             <button
               key={m.id}
@@ -83,7 +83,7 @@ export function Stage() {
               aria-selected={m.id === active}
               aria-controls="stage-panel"
               onClick={() => setActive(m.id)}
-              className={`relative h-10 rounded-full px-4 text-sm transition-colors duration-150 ${m.id === active ? "text-fg" : "text-faint hover:text-dim"}`}
+              className={`relative h-10 rounded-full px-2 text-[13px] min-[375px]:px-3 min-[375px]:text-sm sm:px-4 transition-colors duration-150 ${m.id === active ? "text-fg" : "text-faint hover:text-dim"}`}
             >
               {m.id === active && (
                 <motion.span
@@ -99,7 +99,7 @@ export function Stage() {
 
         <div id="stage-panel" role="tabpanel" aria-labelledby={`tab-${active}`} className="rounded-[14px] bg-black/60 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06)]">
           <Scene mode={active} link={mode.link} />
-          <div className="h-14 px-6 pb-6 text-center text-sm text-dim">
+          <div className="min-h-21 px-6 pb-6 text-center text-sm text-dim sm:min-h-14">
             <AnimatePresence mode="wait" initial={false}>
               <motion.p
                 key={active}
@@ -176,12 +176,15 @@ function Scene({ mode, link }: { mode: Mode; link: string }) {
         <Label>This Mac</Label>
       </div>
 
+      {/* On a phone there's no room between the two, so the link's name sits above them. */}
+      <span className="absolute inset-x-0 top-4 text-center font-mono text-[11px] tabular-nums text-faint md:hidden">{link}</span>
+
       {/* The link */}
-      <div className="mb-16 flex w-16 flex-col items-center gap-2 md:w-28">
+      <div className="mb-16 flex w-8 flex-col items-center gap-2 md:w-28">
         <div className="relative h-px w-full overflow-hidden bg-white/10">
           <span className="absolute inset-y-0 w-1/2 animate-[flow_1.6s_linear_infinite] bg-linear-to-r from-transparent via-white/70 to-transparent" />
         </div>
-        <span className="whitespace-nowrap font-mono text-[11px] tabular-nums text-faint">{link}</span>
+        <span className="hidden whitespace-nowrap font-mono text-[11px] tabular-nums text-faint md:block">{link}</span>
       </div>
 
       {/* The PC */}
@@ -250,15 +253,16 @@ function Win({ className }: { className: string }) {
 
 function CodeCard() {
   return (
-    <div className="grid h-full place-items-center">
-      <div className="rounded-[10px] bg-white/[0.06] px-5 py-3 text-center shadow-[inset_0_0_0_1px_rgb(255_255_255/0.1)]">
-        <p className="eyebrow">Code</p>
-        <p className="mt-1 font-mono text-lg font-medium tracking-[0.2em] text-fg">K7P2QX</p>
+    // Sized to the screen it's on, so the code fits the small PC on a phone too.
+    <div className="@container grid h-full place-items-center">
+      <div className="rounded-[10px] bg-white/[0.06] px-[clamp(8px,6cqw,20px)] py-[clamp(4px,4cqw,12px)] text-center shadow-[inset_0_0_0_1px_rgb(255_255_255/0.1)]">
+        <p className="eyebrow text-[clamp(8px,4cqw,11px)]">Code</p>
+        <p className="mt-1 font-mono text-[clamp(11px,7cqw,18px)] font-medium tracking-[0.2em] text-fg">K7P2QX</p>
       </div>
     </div>
   );
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <span className="mt-3 text-xs text-faint">{children}</span>;
+  return <span className="mt-3 text-center text-xs text-faint">{children}</span>;
 }

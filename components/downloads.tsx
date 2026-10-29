@@ -44,7 +44,7 @@ export function Downloads() {
     <Section id="download" label="Download" title="Get Annex. It's free.">
       <div className="grid gap-3 md:grid-cols-3">
         {PLATFORMS.map(({ name, Icon, body, href, cta, extra, download }) => (
-          <article key={name} className="group-surface flex flex-col p-6">
+          <article key={name} className="group-surface flex min-w-0 flex-col p-6">
             <Icon className="size-7 text-fg" />
             <h3 className="mt-6 text-[17px] font-semibold tracking-tight">{name}</h3>
             <p className="mt-1.5 flex-1 text-[15px] leading-6 text-dim">{body}</p>
