@@ -10,10 +10,13 @@ import { Downloads } from "@/components/downloads";
 import { Faq } from "@/components/faq";
 import { Cta } from "@/components/cta";
 import { Footer } from "@/components/footer";
+import { JsonLd } from "@/components/json-ld";
+import { homeData } from "@/lib/structured-data";
 
 export default function Home() {
   return (
     <>
+      <JsonLd data={homeData} />
       <Backdrop />
       <Nav />
       <main id="main">

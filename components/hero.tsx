@@ -10,7 +10,7 @@ export function Hero() {
   return (
     <section className="relative h-svh min-h-[620px] overflow-hidden bg-black">
       <DotField />
-      <h1 className="sr-only">Annex: your other computer is a second screen</h1>
+      <h1 className="sr-only">Annex: use another computer as a second screen, on Mac, Windows and Linux</h1>
       <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-black via-black/60 to-transparent pt-32">
         <div className="mx-auto max-w-6xl px-5 pb-12 sm:pb-16">
           <Reveal delay={0.2} as="p" className="pointer-events-auto max-w-md text-[17px] leading-relaxed text-fg/90">

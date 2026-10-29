@@ -35,6 +35,10 @@ app/
   layout.tsx           fonts, metadata, icons, analytics, skip link
   page.tsx             the home page, section by section
   docs/page.tsx        the docs
+  docs/content.tsx     what the docs say: features, shortcuts, troubleshooting
+  robots.ts, sitemap.ts         for search engines (everyone, AI crawlers too, is allowed)
+  llms.txt, llms-full.txt       the site as Markdown for AI agents (llmstxt.org), built from lib/llms.ts
+  opengraph-image.tsx           the 1200×630 picture shown when a link is shared
   globals.css          Tailwind, Annex tokens, buttons, chips, framed surfaces
 components/
   nav.tsx, footer.tsx  header (clear over the hero, then a blurred bar) and footer
@@ -49,6 +53,10 @@ components/
   keyboard-gallery.tsx the docs' shortcut gallery: Mac, Windows and Linux keyboards
   docs-ui.tsx          keys, steps and app labels used on the docs page
   links.ts             every download link and install command in one place
+  json-ld.tsx          writes schema.org structured data into a page
+lib/
+  structured-data.ts   the app, FAQ and docs as schema.org data, for search results
+  llms.ts, plain-text.ts  the agent-readable copies, from the same content as the pages
 public/assets/         the app icon and the bare mark (favicon)
 ```
 

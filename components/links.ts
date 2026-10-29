@@ -14,3 +14,6 @@ export const INSTALL = {
   unix: "curl -fsSL https://raw.githubusercontent.com/NRanjan-17/Annex/main/scripts/install.sh | sh",
   windows: "irm https://raw.githubusercontent.com/NRanjan-17/Annex/main/scripts/install.ps1 | iex",
 } as const;
+
+/** The site itself, for metadata, the sitemap and the files agents read. */
+export const SITE = "https://getannex.dev";

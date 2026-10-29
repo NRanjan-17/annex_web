@@ -1,6 +1,6 @@
 import { Section } from "./section";
 
-const QUESTIONS = [
+export const QUESTIONS = [
   { q: "Does it cost anything?", a: "No. Annex is free and open source under the MIT licence. There's no paid version and nothing to sign up for." },
   { q: "Do both computers need Annex?", a: "Yes: the one you're sitting at, and the one whose screen you want to use or extend." },
   {
