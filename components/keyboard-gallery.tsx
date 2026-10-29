@@ -125,11 +125,21 @@ type Shortcut = { title: string; keys: string[]; sep?: "/" };
 type Tab = { name: string; items: Shortcut[] };
 const LEAVE: Shortcut = { title: "Leave control of the other computer", keys: ["ctrl", "opt", "shift", "q"] };
 const VIEW_ONLY: Shortcut = { title: "Leave a view-only session", keys: ["esc"] };
+// While controlling, this computer's own shortcuts go to the other one.
+const SWITCH_APPS: Shortcut = { title: "Switch apps on the other computer", keys: ["opt", "tab"] };
 // Each app's real shortcuts (Mac: AnnexApp, MenuContent, HomeView; Windows: MainWindow and the
 // viewer window; Linux: main.rs and viewer.rs).
 const TABS: Record<Platform, Tab[]> = {
   mac: [
-    { name: "Sessions", items: [LEAVE, VIEW_ONLY] },
+    {
+      name: "Sessions",
+      items: [
+        LEAVE,
+        VIEW_ONLY,
+        { title: "Spotlight on the other Mac", keys: ["cmd", "space"] },
+        { title: "Switch apps on the other Mac", keys: ["cmd", "tab"] },
+      ],
+    },
     {
       name: "App",
       items: [
@@ -146,7 +156,7 @@ const TABS: Record<Platform, Tab[]> = {
     },
   ],
   windows: [
-    { name: "Sessions", items: [LEAVE, VIEW_ONLY] },
+    { name: "Sessions", items: [LEAVE, VIEW_ONLY, { title: "Start on the other computer", keys: ["cmd"] }, SWITCH_APPS] },
     {
       name: "Typing",
       items: [
@@ -156,13 +166,23 @@ const TABS: Record<Platform, Tab[]> = {
     },
   ],
   linux: [
-    { name: "Sessions", items: [LEAVE, { title: "Full screen on or off", keys: ["ctrl", "opt", "shift", "f"] }, VIEW_ONLY] },
+    {
+      name: "Sessions",
+      items: [
+        LEAVE,
+        { title: "Full screen on or off", keys: ["ctrl", "opt", "shift", "f"] },
+        VIEW_ONLY,
+        { title: "Super on the other computer", keys: ["cmd"] },
+        SWITCH_APPS,
+      ],
+    },
     { name: "App", items: [{ title: "Quit Annex", keys: ["ctrl", "q"] }] },
   ],
 };
-const MAC_CAP: Record<string, string> = { ctrl: "⌃", opt: "⌥", shift: "⇧", cmd: "⌘", comma: ",", esc: "esc", return: "return", up: "▲", down: "▼" };
-const PC_CAP: Record<string, string> = { ctrl: "Ctrl", opt: "Alt", shift: "Shift", esc: "Esc", return: "Enter", up: "▲", down: "▼" };
-const capOf = (p: Platform, s: Shortcut, i: number) => (p === "mac" ? MAC_CAP : PC_CAP)[s.keys[i]] ?? s.keys[i].toUpperCase();
+const MAC_CAP: Record<string, string> = { ctrl: "⌃", opt: "⌥", shift: "⇧", cmd: "⌘", comma: ",", esc: "esc", return: "return", up: "▲", down: "▼", space: "space", tab: "⇥" };
+const PC_CAP: Record<string, string> = { ctrl: "Ctrl", opt: "Alt", shift: "Shift", esc: "Esc", return: "Enter", up: "▲", down: "▼", space: "Space", tab: "Tab" };
+const capOf = (p: Platform, s: Shortcut, i: number) =>
+  s.keys[i] === "cmd" && p !== "mac" ? (p === "windows" ? "Win" : "Super") : ((p === "mac" ? MAC_CAP : PC_CAP)[s.keys[i]] ?? s.keys[i].toUpperCase());
 const REST = "Breeze through Annex";
 
 // What a real key press maps to here (event.code → key id).
